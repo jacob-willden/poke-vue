@@ -14,12 +14,13 @@
 			}
 		},
 		methods: {
-			fetchPokemon() {
-				fetch('https://pokeapi.co/api/v2/pokemon?limit=10&offset=0')
+			fetchPokemonData(url) {
+				fetch(url)
 				.then(response => response.json())
 				.then(data => {
 					this.pokemonData = data.results;
-				});
+				})
+				.catch(error => console.error(error));
 			}
 		}
 	};
@@ -31,10 +32,21 @@
 		<h1>{{ message }}</h1>
 		<button @click="message = 'Goodbye World!'" class="button my-4">Click me</button>
 		<IAmError friend="Bagu" />
-		<button @click="fetchPokemon()" class="button my-4">Get First 10 Pokemon</button>
-		<ul>
-			<li v-for="pokemon in pokemonData" :key="pokemon.url">{{ pokemon.name }}</li> <!-- If v-for is used on the ul element, each li will have its own ul element -->
-		</ul>
+		<button @click="fetchPokemonData('https://pokeapi.co/api/v2/pokemon?limit=10&offset=0')" class="button my-4">Get First 10 Pokemon</button>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="pokemon in pokemonData" :key="pokemon.url">
+					<td>{{ pokemon.url }}</td>
+					<td>{{ pokemon.name }}</td>
+				</tr>
+			</tbody>
+		</table>
 	</main>
 </template>
 

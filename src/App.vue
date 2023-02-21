@@ -27,17 +27,24 @@
 			},
 			async get10Pokemon() {
 				const data = await this.fetchData('https://pokeapi.co/api/v2/pokemon?limit=10&offset=0');
-				const pokemonList = data.results;
-				for(let pokemon of pokemonList) {
-					pokemon.type = await this.getType(pokemon.url.split('/')[6]);
+				const pokemonList = [];
+				for(let pokemon of data.results) {
+					const id = pokemon.url.split('/')[6];
+					const singlePokemonData = await this.getSinglePokemonData(id);
+					pokemonList.push({
+						id,
+						name: pokemon.name,
+						type: singlePokemonData.primaryType,
+						image: singlePokemonData.image
+					});
 				}
 				this.pokemonData = pokemonList;
 			},
-			async getType(id) {
-				let singlePokemonData = await this.fetchData(`https://pokeapi.co/api/v2/pokemon/${id}`);
-				let primaryType = singlePokemonData.types[0].type.name;
-				console.log(primaryType);
-				return primaryType;
+			async getSinglePokemonData(id) {
+				const data = await this.fetchData(`https://pokeapi.co/api/v2/pokemon/${id}`);
+				const primaryType = data.types[0].type.name;
+				const image = data.sprites.other['official-artwork'].front_default;
+				return {primaryType, image};
 			}
 		}
 	};
@@ -56,13 +63,15 @@
 					<th>ID</th>
 					<th>Name</th>
 					<th>Type</th>
+					<th>Image</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="pokemon in pokemonData" :key="pokemon.url">
-					<td>{{ pokemon.url.split('/')[6] }}</td>
+					<td>{{ pokemon.id }}</td>
 					<td>{{ pokemon.name }}</td>
 					<td>{{ pokemon.type }}</td>
+					<td>{{ pokemon.image }}</td>
 				</tr>
 			</tbody>
 		</table>

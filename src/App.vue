@@ -14,13 +14,21 @@
 			}
 		},
 		methods: {
-			fetchPokemonData(url) {
-				fetch(url)
-				.then(response => response.json())
-				.then(data => {
+			// Derived from async Fetch example in Vue: https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
+			async fetchPokemonData(url) {
+				try {
+					const response = await fetch(url);
+					const data = await response.json();
 					this.pokemonData = data.results;
-				})
-				.catch(error => console.error(error));
+					return data.results;
+				}
+				catch(error) {
+					console.error(error);
+				}
+			},
+			async testFetch() {
+				let result = await this.fetchPokemonData('https://pokeapi.co/api/v2/pokemon?limit=10&offset=0');
+				console.log(result);
 			}
 		}
 	};
@@ -32,7 +40,7 @@
 		<h1>{{ message }}</h1>
 		<button @click="message = 'Goodbye World!'" class="button my-4">Click me</button>
 		<IAmError friend="Bagu" />
-		<button @click="fetchPokemonData('https://pokeapi.co/api/v2/pokemon?limit=10&offset=0')" class="button my-4">Get First 10 Pokemon</button>
+		<button @click="testFetch()" class="button my-4">Get First 10 Pokemon</button>
 		<table class="table">
 			<thead>
 				<tr>
@@ -42,7 +50,7 @@
 			</thead>
 			<tbody>
 				<tr v-for="pokemon in pokemonData" :key="pokemon.url">
-					<td>{{ pokemon.url }}</td>
+					<td>{{ pokemon.url.split('/')[6] }}</td>
 					<td>{{ pokemon.name }}</td>
 				</tr>
 			</tbody>

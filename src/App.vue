@@ -10,8 +10,13 @@
 		data() {
 			return {
 				message: 'Hello World!',
-				pokemonData: []
+				pokemonToDisplay: [],
+				totalRelevantPokemon: 0,
+				offset: 0
 			}
+		},
+		beforeMount() {
+			this.get10Pokemon(0);
 		},
 		methods: {
 			// Derived from async Fetch example in Vue: https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
@@ -25,8 +30,8 @@
 					console.error(error);
 				}
 			},
-			async get10Pokemon() {
-				const data = await this.fetchData('https://pokeapi.co/api/v2/pokemon?limit=10&offset=0');
+			async get10Pokemon(offset) {
+				const data = await this.fetchData(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${offset}`);
 				const pokemonList = [];
 				for(let pokemon of data.results) {
 					const id = pokemon.url.split('/')[6];
@@ -38,13 +43,20 @@
 						image: singlePokemonData.image
 					});
 				}
-				this.pokemonData = pokemonList;
+				this.pokemonToDisplay = pokemonList;
 			},
 			async getSinglePokemonData(id) {
 				const data = await this.fetchData(`https://pokeapi.co/api/v2/pokemon/${id}`);
 				const primaryType = data.types[0].type.name;
 				const image = data.sprites.other['official-artwork'].front_default;
 				return {primaryType, image};
+			},
+			changeOffsetAndRefresh(number) {
+				if(this.offset + number >= 0 && this.offset + number <= 1279) { // Hardcoding the limit for now
+					this.offset += number;
+					console.log('new offset:', this.offset);
+					get10Pokemon(this.offset);
+				}
 			}
 		}
 	};
@@ -54,9 +66,11 @@
 	<main>
 		<CommunityIcon />
 		<h1>{{ message }}</h1>
-		<button @click="message = 'Goodbye World!'" class="button my-4">Click me</button>
 		<IAmError friend="Bagu" />
-		<button @click="get10Pokemon()" class="button my-4">Get First 10 Pokemon</button>
+		<button @click="message = 'Goodbye World!'" class="button my-4">Click me</button>
+		<!-- <button @click="get10Pokemon(0)" class="button my-4">Get First 10 Pokemon</button> -->
+		<button @click="changeOffsetAndRefresh(-10)" class="button">Previous</button>
+		<button @click="console.log('bleh')" class="button">Next</button>
 		<table class="table">
 			<thead>
 				<tr>
@@ -64,14 +78,18 @@
 					<th>Name</th>
 					<th>Type</th>
 					<th>Image</th>
+					<th>Favorite?</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="pokemon in pokemonData" :key="pokemon.url">
+				<tr v-for="pokemon in pokemonToDisplay" :key="pokemon.id">
 					<td>{{ pokemon.id }}</td>
 					<td>{{ pokemon.name }}</td>
 					<td>{{ pokemon.type }}</td>
 					<td>{{ pokemon.image }}</td>
+					<td>
+						<input @click="" type="checkbox" :data-pokemon-id="pokemon.id" class="checkbox">
+					</td>
 				</tr>
 			</tbody>
 		</table>

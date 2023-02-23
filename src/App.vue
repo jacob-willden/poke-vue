@@ -55,7 +55,7 @@
 				if(this.offset + number >= 0 && this.offset + number <= 1279) { // Hardcoding the limit for now
 					this.offset += number;
 					console.log('new offset:', this.offset);
-					get10Pokemon(this.offset);
+					this.get10Pokemon(this.offset);
 				}
 			}
 		}
@@ -70,7 +70,7 @@
 		<button @click="message = 'Goodbye World!'" class="button my-4">Click me</button>
 		<!-- <button @click="get10Pokemon(0)" class="button my-4">Get First 10 Pokemon</button> -->
 		<button @click="changeOffsetAndRefresh(-10)" class="button">Previous</button>
-		<button @click="console.log('bleh')" class="button">Next</button>
+		<button @click="changeOffsetAndRefresh(10)" class="button">Next</button>
 		<table class="table">
 			<thead>
 				<tr>

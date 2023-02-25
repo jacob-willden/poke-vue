@@ -82,24 +82,26 @@
 
 <template>
 	<main>
+		<h1 class="title">Pokémon Vue App</h1>
 		<!-- <CommunityIcon />
 		<h1>{{ message }}</h1>
 		<button @click="message = 'Goodbye World!'" class="button my-4">Click me</button>
 		<button @click="get10Pokemon(0, sortSelection)" class="button my-4">Get First 10 Pokemon</button> -->
 		<!-- View Favorites Popup Button -->
-		<span id="sort-buttons">
-			<label class="radio">
-				<input type="radio" @change="sortSelection = 'id'" name="sort-pokemon" value="id" checked>
-				Sort by ID
-			</label>
-			<label class="radio">
-				<input type="radio" @change="sortSelection = 'type'" name="sort-pokemon" value="type">
-				Sort by Type
-			</label>
-		</span>
-		<p>sortSelection: {{ sortSelection }}</p>
-		<button @click="changeOffsetAndRefresh(-10)" class="button">Previous</button>
-		<button @click="changeOffsetAndRefresh(10)" class="button">Next</button>
+		<div class="button-row">
+			<span id="sort-buttons">
+				<label class="radio">
+					<input type="radio" @change="sortSelection = 'id'" name="sort-pokemon" value="id" checked>
+					Sort by ID
+				</label>
+				<label class="radio">
+					<input type="radio" @change="sortSelection = 'type'" name="sort-pokemon" value="type">
+					Sort by Type
+				</label>
+			</span>
+			<!-- <p>sortSelection: {{ sortSelection }}</p> -->
+			<button @click="modalVisible = !modalVisible" class="button view-favorites">View Favorites</button>
+		</div>
 
 		<!-- <PokemonTable pokemonToDisplay={{pokemonToDisplay}} /> -->
 		<table class="table">
@@ -125,7 +127,10 @@
 			</tbody>
 		</table>
 
-		<button @click="modalVisible = !modalVisible" class="button">View Favorites</button>
+		<div class="button-row">
+			<button @click="changeOffsetAndRefresh(-10)" class="button">Previous</button>
+			<button @click="changeOffsetAndRefresh(10)" class="button">Next</button>
+		</div>
 
 		<div class="modal" :class="{'is-active': modalVisible}">
 			<div class="modal-background"></div>
@@ -165,5 +170,14 @@
 	.my-4 {
 		margin-top: 1rem;
 		margin-bottom: 1rem;
+	}
+	.button-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-bottom: 1rem;
+	}
+	.view-favorites {
+		margin-left: 1rem;
 	}
 </style>

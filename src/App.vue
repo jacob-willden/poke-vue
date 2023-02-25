@@ -1,22 +1,25 @@
 <script>
-	import IAmError from './components/IAmError.vue';
-	import CommunityIcon from './components/icons/IconCommunity.vue';
+	//import CommunityIcon from './components/icons/IconCommunity.vue';
+	//import PokemonTable from './components/PokemonTable.vue';
 
 	export default {
 		components: {
-			IAmError,
-			CommunityIcon
+			//CommunityIcon,
+			//PokemonTable
 		},
 		data() {
 			return {
-				message: 'Hello World!',
+				//message: 'Hello World!',
 				pokemonToDisplay: [],
-				totalRelevantPokemon: 0,
-				offset: 0
+				totalPokemon: 1279, // Hardcoding the limit for now
+				offset: 0,
+				sortSelection: 'id',
+				favoritePokemon: [],
+				modalVisible: false
 			}
 		},
 		beforeMount() {
-			this.get10Pokemon(0);
+			this.get10Pokemon(0, this.sortSelection);
 		},
 		methods: {
 			// Derived from async Fetch example in Vue: https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
@@ -30,7 +33,7 @@
 					console.error(error);
 				}
 			},
-			async get10Pokemon(offset) {
+			async get10Pokemon(offset, sortSelection) {
 				const data = await this.fetchData(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${offset}`);
 				const pokemonList = [];
 				for(let pokemon of data.results) {
@@ -52,11 +55,24 @@
 				return {primaryType, image};
 			},
 			changeOffsetAndRefresh(number) {
-				if(this.offset + number >= 0 && this.offset + number <= 1279) { // Hardcoding the limit for now
+				if(this.offset + number >= 0 && this.offset + number <= this.totalPokemon) {
 					this.offset += number;
 					console.log('new offset:', this.offset);
-					this.get10Pokemon(this.offset);
+					this.get10Pokemon(this.offset, this.sortSelection);
 				}
+			},
+			toggleFavorite(id) {
+				if(this.favoritePokemon.includes(id)) {
+					const index = this.favoritePokemon.findIndex(item => item === id);
+					this.favoritePokemon.splice(index, 1);
+				}
+				else {
+					this.favoritePokemon.unshift(id);
+				}
+				//console.log('new favorites:', this.favoritePokemon);
+			},
+			consoleLog(string) {
+				console.log(string);
 			}
 		}
 	};
@@ -64,13 +80,26 @@
 
 <template>
 	<main>
-		<CommunityIcon />
+		<!-- <CommunityIcon />
 		<h1>{{ message }}</h1>
-		<IAmError friend="Bagu" />
 		<button @click="message = 'Goodbye World!'" class="button my-4">Click me</button>
-		<!-- <button @click="get10Pokemon(0)" class="button my-4">Get First 10 Pokemon</button> -->
+		<button @click="get10Pokemon(0, sortSelection)" class="button my-4">Get First 10 Pokemon</button> -->
+		<!-- View Favorites Popup Button -->
+		<span id="sort-buttons">
+			<label class="radio">
+				<input type="radio" @change="sortSelection = 'id'" name="sort-pokemon" value="id" checked>
+				Sort by ID
+			</label>
+			<label class="radio">
+				<input type="radio" @change="sortSelection = 'type'" name="sort-pokemon" value="type">
+				Sort by Type
+			</label>
+		</span>
+		<p>sortSelection: {{ sortSelection }}</p>
 		<button @click="changeOffsetAndRefresh(-10)" class="button">Previous</button>
 		<button @click="changeOffsetAndRefresh(10)" class="button">Next</button>
+
+		<!-- <PokemonTable pokemonToDisplay={{pokemonToDisplay}} /> -->
 		<table class="table">
 			<thead>
 				<tr>
@@ -88,11 +117,42 @@
 					<td>{{ pokemon.type }}</td>
 					<td>{{ pokemon.image }}</td>
 					<td>
-						<input @click="" type="checkbox" :data-pokemon-id="pokemon.id" class="checkbox">
+						<input @click="toggleFavorite(pokemon.id)" type="checkbox" class="checkbox favorite-button">
 					</td>
 				</tr>
 			</tbody>
 		</table>
+
+		<button @click="modalVisible = !modalVisible">Toggle Modal</button>
+
+		<div class="modal" :class="{'is-active': modalVisible}">
+			<div class="modal-background"></div>
+
+			<div class="modal-content">
+				<div class="box">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Type</th>
+								<th>Image</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="pokemon in pokemonToDisplay" :key="pokemon.id">
+								<td>{{ pokemon.id }}</td>
+								<td>{{ pokemon.name }}</td>
+								<td>{{ pokemon.type }}</td>
+								<td>{{ pokemon.image }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<button @click="modalVisible = false" class="modal-close is-large" aria-label="close"></button>
+			</div>
 	</main>
 </template>
 

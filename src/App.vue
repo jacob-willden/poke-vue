@@ -117,7 +117,7 @@
 					<td>{{ pokemon.id }}</td>
 					<td>{{ pokemon.name }}</td>
 					<td>{{ pokemon.type }}</td>
-					<td>{{ pokemon.image }}</td>
+					<td><a :href="pokemon.image">View</a></td>
 					<td>
 						<input @click="toggleFavorite(pokemon)" type="checkbox" class="checkbox favorite-button">
 					</td>
@@ -125,7 +125,7 @@
 			</tbody>
 		</table>
 
-		<button @click="modalVisible = !modalVisible">Toggle Modal</button>
+		<button @click="modalVisible = !modalVisible" class="button">View Favorites</button>
 
 		<div class="modal" :class="{'is-active': modalVisible}">
 			<div class="modal-background"></div>
@@ -142,11 +142,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="pokemon in pokemonToDisplay" :key="pokemon.id">
+							<tr v-for="pokemon in favoritePokemon" :key="pokemon.id">
 								<td>{{ pokemon.id }}</td>
 								<td>{{ pokemon.name }}</td>
 								<td>{{ pokemon.type }}</td>
-								<td>{{ pokemon.image }}</td>
+								<td><a :href="pokemon.image">View</a></td>
 							</tr>
 						</tbody>
 					</table>

@@ -121,7 +121,7 @@
 					<td>{{ pokemon.type }}</td>
 					<td><a :href="pokemon.image">View</a></td>
 					<td>
-						<input @click="toggleFavorite(pokemon)" type="checkbox" class="checkbox favorite-button">
+						<input @click="toggleFavorite(pokemon)" type="checkbox" class="checkbox favorite-button" :checked="favoritePokemon.find(item => item.id === pokemon.id) ? true : false">
 					</td>
 				</tr>
 			</tbody>

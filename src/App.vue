@@ -61,13 +61,15 @@
 					this.get10Pokemon(this.offset, this.sortSelection);
 				}
 			},
-			toggleFavorite(id) {
-				if(this.favoritePokemon.includes(id)) {
-					const index = this.favoritePokemon.findIndex(item => item === id);
-					this.favoritePokemon.splice(index, 1);
+			toggleFavorite(pokemonProxy) {
+				const pokemon = JSON.parse(JSON.stringify(pokemonProxy)); // To extract Proxy object data, from Mert on StackOverflow: https://stackoverflow.com/questions/66605274/accessing-a-proxy-object-in-vue3
+
+ 				const index = this.favoritePokemon.findIndex(item => item.id.toString() === pokemon.id);
+ 				if(index === -1) {
+					this.favoritePokemon.push(pokemon);
 				}
 				else {
-					this.favoritePokemon.unshift(id);
+					this.favoritePokemon.splice(index, 1);
 				}
 				//console.log('new favorites:', this.favoritePokemon);
 			},
@@ -117,7 +119,7 @@
 					<td>{{ pokemon.type }}</td>
 					<td>{{ pokemon.image }}</td>
 					<td>
-						<input @click="toggleFavorite(pokemon.id)" type="checkbox" class="checkbox favorite-button">
+						<input @click="toggleFavorite(pokemon)" type="checkbox" class="checkbox favorite-button">
 					</td>
 				</tr>
 			</tbody>

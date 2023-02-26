@@ -226,7 +226,8 @@
 			</div>
 
 			<button @click="modalVisible = false" class="modal-close is-large" aria-label="close"></button>
-			</div>
+		</div>
+		<p>This project is for educational uses only.</p>
 	</main>
 </template>
 

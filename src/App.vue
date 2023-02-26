@@ -36,7 +36,7 @@
 				}
 			},
 			async get10Pokemon(offset, sortSelection) {
-				if(sortSelection === 'id') {
+				if(sortSelection === 'id' && offset < this.totalPokemon - 10) {
 					const data = await this.fetchData(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${offset}`);
 					const pokemonList = [];
 					for(let pokemon of data.results) {
@@ -58,7 +58,9 @@
 
 					const idexesToFetch = [];
 					for(let i = this.offset; i <= this.offset + 10; i++) {
-						idexesToFetch.push(i);
+						if(i < typeList.pokemon.length - 10) {
+							idexesToFetch.push(i);
+						}
 					}
 
 					const pokemonList = [];
@@ -112,6 +114,10 @@
 				}
 				this.changeOffsetAndRefresh(0);
 			},
+			changeSelectedType(type) {
+				this.selectedType = type;
+				this.changeOffsetAndRefresh(0);
+			},
 			consoleLog(string) {
 				console.log(string);
 			}
@@ -140,7 +146,7 @@
 			</span>
 			<!-- <p>sortSelection: {{ sortSelection }}</p> -->
 			<div class="select">
-				<select :value="selectedType" :disabled="selectDisabled">
+				<select @change="changeSelectedType($event.target.value)" :disabled="selectDisabled"> <!-- https://stackoverflow.com/questions/51953173/how-do-i-pass-input-text-using-v-onchange-to-my-vue-method -->
 					<option value="1">Normal</option>
 					<option value="2">Fighting</option>
 					<option value="3">Flying</option>
@@ -170,7 +176,7 @@
 				<tr>
 					<th>ID</th>
 					<th>Name</th>
-					<th>Type</th>
+					<th>Primary Type</th>
 					<th>Image</th>
 					<th>Favorite?</th>
 				</tr>
@@ -203,7 +209,7 @@
 							<tr>
 								<th>ID</th>
 								<th>Name</th>
-								<th>Type</th>
+								<th>Primary Type</th>
 								<th>Image</th>
 							</tr>
 						</thead>

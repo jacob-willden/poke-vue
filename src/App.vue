@@ -168,7 +168,7 @@
 				</select>
 			</div>
 		</div>
-		<button @click="modalVisible = !modalVisible" class="button">View Favorites</button>
+		<button @click="modalVisible = !modalVisible" class="button favorites-button">View Favorites</button>
 
 		<!-- <PokemonTable pokemonToDisplay={{pokemonToDisplay}} /> -->
 		<table class="table">
@@ -246,5 +246,8 @@
 	}
 	.select {
 		margin-left: 1rem;
+	}
+	.favorites-button {
+		margin-bottom: 1rem;
 	}
 </style>

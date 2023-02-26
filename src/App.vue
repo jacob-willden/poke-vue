@@ -11,11 +11,13 @@
 			return {
 				//message: 'Hello World!',
 				pokemonToDisplay: [],
-				totalPokemon: 1279, // Hardcoding the limit for now
+				totalPokemon: 1279,
 				offset: 0,
 				sortSelection: 'id',
 				favoritePokemon: [],
-				modalVisible: false
+				modalVisible: false,
+				selectDisabled: true,
+				selectedType: 1
 			}
 		},
 		beforeMount() {
@@ -34,19 +36,46 @@
 				}
 			},
 			async get10Pokemon(offset, sortSelection) {
-				const data = await this.fetchData(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${offset}`);
-				const pokemonList = [];
-				for(let pokemon of data.results) {
-					const id = pokemon.url.split('/')[6];
-					const singlePokemonData = await this.getSinglePokemonData(id);
-					pokemonList.push({
-						id,
-						name: pokemon.name,
-						type: singlePokemonData.primaryType,
-						image: singlePokemonData.image
-					});
+				if(sortSelection === 'id') {
+					const data = await this.fetchData(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${offset}`);
+					const pokemonList = [];
+					for(let pokemon of data.results) {
+						const id = pokemon.url.split('/')[6];
+						const singlePokemonData = await this.getSinglePokemonData(id);
+						pokemonList.push({
+							id,
+							name: pokemon.name,
+							type: singlePokemonData.primaryType,
+							image: singlePokemonData.image
+						});
+					}
+					this.pokemonToDisplay = pokemonList;
 				}
-				this.pokemonToDisplay = pokemonList;
+				else if(sortSelection === 'type') {
+					const typeList = await this.fetchData(`https://pokeapi.co/api/v2/type/${this.selectedType}`);
+					//console.log('typeList:', typeList);
+					this.pokemonToDisplay = [];
+
+					const idexesToFetch = [];
+					for(let i = this.offset; i <= this.offset + 10; i++) {
+						idexesToFetch.push(i);
+					}
+
+					const pokemonList = [];
+					for(let index of idexesToFetch) {
+						const id = typeList.pokemon[index].pokemon.url.split('/')[6];
+						const name = typeList.pokemon[index].pokemon.name;
+
+						const singlePokemonData = await this.getSinglePokemonData(id);
+						pokemonList.push({
+							id,
+							name,
+							type: singlePokemonData.primaryType,
+							image: singlePokemonData.image
+						});
+					}
+					this.pokemonToDisplay = pokemonList;
+				}
 			},
 			async getSinglePokemonData(id) {
 				const data = await this.fetchData(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -73,6 +102,16 @@
 				}
 				//console.log('new favorites:', this.favoritePokemon);
 			},
+			changeSort(selection) {
+				this.sortSelection = selection;
+				if(selection === 'id') {
+					this.selectDisabled = true;
+				}
+				else if(selection === 'type') {
+					this.selectDisabled = false;
+				}
+				this.changeOffsetAndRefresh(0);
+			},
 			consoleLog(string) {
 				console.log(string);
 			}
@@ -91,17 +130,39 @@
 		<div class="button-row">
 			<span id="sort-buttons">
 				<label class="radio">
-					<input type="radio" @change="sortSelection = 'id'" name="sort-pokemon" value="id" checked>
+					<input type="radio" @change="changeSort('id')" name="sort-pokemon" value="id" checked>
 					Sort by ID
 				</label>
 				<label class="radio">
-					<input type="radio" @change="sortSelection = 'type'" name="sort-pokemon" value="type">
+					<input type="radio" @change="changeSort('type')" name="sort-pokemon" value="type">
 					Sort by Type
 				</label>
 			</span>
 			<!-- <p>sortSelection: {{ sortSelection }}</p> -->
-			<button @click="modalVisible = !modalVisible" class="button view-favorites">View Favorites</button>
+			<div class="select">
+				<select :value="selectedType" :disabled="selectDisabled">
+					<option value="1">Normal</option>
+					<option value="2">Fighting</option>
+					<option value="3">Flying</option>
+					<option value="4">Poison</option>
+					<option value="5">Ground</option>
+					<option value="6">Rock</option>
+					<option value="7">Bug</option>
+					<option value="8">Ghost</option>
+					<option value="9">Steel</option>
+					<option value="10">Fire</option>
+					<option value="11">Water</option>
+					<option value="12">Grass</option>
+					<option value="13">Electric</option>
+					<option value="14">Psychic</option>
+					<option value="15">Ice</option>
+					<option value="16">Dragon</option>
+					<option value="17">Dark</option>
+					<option value="18">Fairy</option>
+				</select>
+			</div>
 		</div>
+		<button @click="modalVisible = !modalVisible" class="button">View Favorites</button>
 
 		<!-- <PokemonTable pokemonToDisplay={{pokemonToDisplay}} /> -->
 		<table class="table">
@@ -177,7 +238,7 @@
 		align-items: center;
 		padding-bottom: 1rem;
 	}
-	.view-favorites {
+	.select {
 		margin-left: 1rem;
 	}
 </style>

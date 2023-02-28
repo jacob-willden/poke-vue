@@ -57,7 +57,7 @@
 					this.pokemonToDisplay = [];
 
 					const idexesToFetch = [];
-					for(let i = this.offset; i <= this.offset + 10; i++) {
+					for(let i = this.offset; i <= this.offset + 9; i++) {
 						if(i < typeList.pokemon.length - 10) {
 							idexesToFetch.push(i);
 						}

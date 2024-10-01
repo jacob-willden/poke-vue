@@ -15,13 +15,16 @@
 				offset: 0,
 				sortSelection: 'id',
 				favoritePokemon: [],
-				modalVisible: false,
+				modalElement: null,
 				selectDisabled: true,
 				selectedType: 1
 			}
 		},
 		beforeMount() {
 			this.get10Pokemon(0, this.sortSelection);
+		},
+		mounted() {
+			this.modalElement = this.$refs.modal;
 		},
 		methods: {
 			// Derived from async Fetch example in Vue: https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
@@ -146,7 +149,8 @@
 			</span>
 			<!-- <p>sortSelection: {{ sortSelection }}</p> -->
 			<div class="select">
-				<select @change="changeSelectedType($event.target.value)" :disabled="selectDisabled"> <!-- https://stackoverflow.com/questions/51953173/how-do-i-pass-input-text-using-v-onchange-to-my-vue-method -->
+				<label for="type-select">Type</label>
+				<select id="type-select" @change="changeSelectedType($event.target.value)" :disabled="selectDisabled"> <!-- https://stackoverflow.com/questions/51953173/how-do-i-pass-input-text-using-v-onchange-to-my-vue-method -->
 					<option value="1">Normal</option>
 					<option value="2">Fighting</option>
 					<option value="3">Flying</option>
@@ -168,7 +172,29 @@
 				</select>
 			</div>
 		</div>
-		<button @click="modalVisible = !modalVisible" class="button favorites-button">View Favorites</button>
+
+		<button @click="modalElement.showModal()" class="button favorites-button">View Favorites</button>
+		<dialog ref="modal">
+			<button @click="modalElement.close()" class="button">Close</button>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Primary Type</th>
+						<th>Image</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="pokemon in favoritePokemon" :key="pokemon.id">
+						<td>{{ pokemon.id }}</td>
+						<td>{{ pokemon.name }}</td>
+						<td>{{ pokemon.type }}</td>
+						<td><a :href="pokemon.image">View</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</dialog>
 
 		<!-- <PokemonTable pokemonToDisplay={{pokemonToDisplay}} /> -->
 		<table class="table">
@@ -195,38 +221,10 @@
 		</table>
 
 		<div class="button-row">
-			<button @click="changeOffsetAndRefresh(-10)" class="button">Previous</button>
-			<button @click="changeOffsetAndRefresh(10)" class="button">Next</button>
+			<button @click="changeOffsetAndRefresh(-10)" id="previous-button" class="button">Previous</button>
+			<button @click="changeOffsetAndRefresh(10)" id="next-button" class="button">Next</button>
 		</div>
 
-		<div class="modal" :class="{'is-active': modalVisible}">
-			<div class="modal-background"></div>
-
-			<div class="modal-content">
-				<div class="box">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Name</th>
-								<th>Primary Type</th>
-								<th>Image</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr v-for="pokemon in favoritePokemon" :key="pokemon.id">
-								<td>{{ pokemon.id }}</td>
-								<td>{{ pokemon.name }}</td>
-								<td>{{ pokemon.type }}</td>
-								<td><a :href="pokemon.image">View</a></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-
-			<button @click="modalVisible = false" class="modal-close is-large" aria-label="close"></button>
-		</div>
 		<p>This project uses the <a href="https://pokeapi.co/">the PokéAPI (Pokémon Application Programming Interface)</a>.</p>
 	</main>
 </template>

@@ -16,7 +16,6 @@
 				sortSelection: 'id',
 				favoritePokemon: [],
 				modalElement: null,
-				selectDisabled: true,
 				selectedType: 1
 			}
 		},
@@ -109,17 +108,13 @@
 			},
 			changeSort(selection) {
 				this.sortSelection = selection;
-				if(selection === 'id') {
-					this.selectDisabled = true;
-				}
-				else if(selection === 'type') {
-					this.selectDisabled = false;
-				}
 				this.changeOffsetAndRefresh(0);
 			},
 			changeSelectedType(type) {
-				this.selectedType = type;
-				this.changeOffsetAndRefresh(0);
+				if(this.sortSelection === 'type') {
+					this.selectedType = type;
+					this.changeOffsetAndRefresh(0);
+				}
 			},
 			consoleLog(string) {
 				console.log(string);
@@ -150,7 +145,7 @@
 			<!-- <p>sortSelection: {{ sortSelection }}</p> -->
 			<div class="select">
 				<label for="type-select">Type</label>
-				<select id="type-select" @change="changeSelectedType($event.target.value)" :disabled="selectDisabled"> <!-- https://stackoverflow.com/questions/51953173/how-do-i-pass-input-text-using-v-onchange-to-my-vue-method -->
+				<select id="type-select" @change="changeSelectedType($event.target.value)"> <!-- https://stackoverflow.com/questions/51953173/how-do-i-pass-input-text-using-v-onchange-to-my-vue-method -->
 					<option value="1">Normal</option>
 					<option value="2">Fighting</option>
 					<option value="3">Flying</option>

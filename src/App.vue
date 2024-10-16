@@ -10,9 +10,9 @@
 
     One part of the code below is provided by Mert from StackOverflow,
 	and is explicitly stated as so. Such code is released under the
-	Creative Commons Attribution Share-Alike 4.0. I specify Creative
-	Commons as my proxy to make the contributions from StackOverflow
-	compatible with future versions of the GPL.
+	Creative Commons Attribution Share-Alike 4.0 (CC BY-SA 4.0). I
+	specify Creative Commons as my proxy to make the contributions
+	from StackOverflow compatible with future versions of the GPL.
 
     Afformentioned source code derived and modified by Jacob Willden
     Date of Derivation: February 25, 2023
@@ -134,7 +134,7 @@
 				}
 			},
 			toggleFavorite(pokemonProxy) {
-				const pokemon = JSON.parse(JSON.stringify(pokemonProxy)); // Extract Proxy object data, from Mert on StackOverflow: https://stackoverflow.com/questions/66605274/accessing-a-proxy-object-in-vue3
+				const pokemon = JSON.parse(JSON.stringify(pokemonProxy)); // Extract Proxy object data, from Mert on StackOverflow (CC BY-SA 4.0): https://stackoverflow.com/questions/66605274/accessing-a-proxy-object-in-vue3
 
  				const index = this.favoritePokemon.findIndex(item => item.id.toString() === pokemon.id);
  				if(index === -1) {

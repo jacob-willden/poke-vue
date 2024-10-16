@@ -1,3 +1,42 @@
+<!--
+    @source: https://github.com/jacob-willden/poke-vue/
+
+    @licstart  The following is the entire license notice for this file.
+
+    This file is part of Poké-Vue.
+
+    Poké-Vue Copyright (C) 2023, 2024 Jacob Willden
+    (Released under the GNU General Public License (GNU GPL) Version 3.0 or later)
+
+    One part of the code below is provided by Mert from StackOverflow,
+	and is explicitly stated as so. Such code is released under the
+	Creative Commons Attribution Share-Alike 4.0. I specify Creative
+	Commons as my proxy to make the contributions from StackOverflow
+	compatible with future versions of the GPL.
+
+    Afformentioned source code derived and modified by Jacob Willden
+    Date of Derivation: February 25, 2023
+
+    Poké-Vue is free software: you can redistribute it and/or
+	modify it under the terms of the GNU General Public License (GNU
+	GPL) as published by the Free Software Foundation, either version
+	3 of the License, or (at your option) any later version. The
+	project is distributed WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+	PURPOSE. See the GNU GPL for more details.
+
+    As additional permission under GNU GPL version 3 section 7, you
+    may distribute non-source (e.g., minimized or compacted) forms of
+    the code without the copy of the GNU GPL normally required by
+    section 4, provided you include this license notice and a URL
+    through which recipients can access the Corresponding Source.
+
+    You should have recieved a copy of the GNU General Public License
+    along with this project. Otherwise, see: https://www.gnu.org/licenses/
+
+    @licend  The above is the entire license notice for this file.
+-->
+
 <script>
 	//import CommunityIcon from './components/icons/IconCommunity.vue';
 	//import PokemonTable from './components/PokemonTable.vue';
@@ -26,7 +65,7 @@
 			this.modalElement = this.$refs.modal;
 		},
 		methods: {
-			// Derived from async Fetch example in Vue: https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
+			// Derived from async Fetch example on Mozilla Developer Network: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 			async fetchData(url) {
 				try {
 					const response = await fetch(url);
@@ -95,7 +134,7 @@
 				}
 			},
 			toggleFavorite(pokemonProxy) {
-				const pokemon = JSON.parse(JSON.stringify(pokemonProxy)); // To extract Proxy object data, from Mert on StackOverflow: https://stackoverflow.com/questions/66605274/accessing-a-proxy-object-in-vue3
+				const pokemon = JSON.parse(JSON.stringify(pokemonProxy)); // Extract Proxy object data, from Mert on StackOverflow: https://stackoverflow.com/questions/66605274/accessing-a-proxy-object-in-vue3
 
  				const index = this.favoritePokemon.findIndex(item => item.id.toString() === pokemon.id);
  				if(index === -1) {

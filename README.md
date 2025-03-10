@@ -18,3 +18,5 @@ As additional permission under GNU GPL version 3 section 7, you may distribute n
 You should have recieved a copy of the GNU General Public License along with this project. Otherwise, see: https://www.gnu.org/licenses/
 
 One part of the code was derived from Mert on [StackOverflow](https://stackoverflow.com/), which being posted after 2018, is released under [the Creative Commons Attribution Share-Alike 4.0](https://creativecommons.org/licenses/by-sa/4.0/), [according to the site's documentation](https://stackoverflow.com/help/licensing). The Creative Commons Attribution Share-Alike 4.0 [is compatible with the GPL version 3 or later, on the condition that I specify Creative Commons as my proxy](https://www.gnu.org/licenses/license-list.html#ccbysa). I specify Creative Commons as my proxy to make the contributions from StackOverflow compatible with future versions of the GPL. The use of code from StackOverflow is specifically labeled as such.
+
+`SPDX-License-Identifier: GPL-3.0-or-later`

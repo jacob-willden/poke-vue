@@ -5,9 +5,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
 function getTableRows() {
-	let parentPath = './dist/assets';
-	// if(process.env.PROD) parentPath = './dist/assets';
-	// else parentPath = './src';
+	const parentPath = './dist/assets';
 	let htmlRows = [];
 	const fileNames = readdirSync(parentPath);
 	for(let file of fileNames) {

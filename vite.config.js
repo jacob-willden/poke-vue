@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
-function getLibreJSTableHTML() {
+function getTableRows() {
 	let parentPath = './dist/assets';
 	// if(process.env.PROD) parentPath = './dist/assets';
 	// else parentPath = './src';
@@ -23,15 +23,15 @@ function getLibreJSTableHTML() {
 	return `<table id="jslicense-labels1"><tbody>${htmlRows}</tbody></table>`;
 }
 
-function htmlPlugin() {
+function scriptLicensesTable() {
 	return {
-		name: 'html-transform',
+		name: 'script-licenses-table',
 		async closeBundle() {
 			// Modified from asgoth on StackOverflow (CC BY-SA 3.0): https://stackoverflow.com/questions/14177087/replace-a-string-in-a-file-with-nodejs
 			readFile(import.meta.dirname + '/dist/javascript/index.html', 'utf8', (error, data) => {
 				if(error) return console.error(error);
 				const regex = /\<table id=\"jslicense-labels1\">.*\<\/table>/;
-				const result = data.replace(regex, getLibreJSTableHTML());
+				const result = data.replace(regex, getTableRows());
 
 				writeFile(import.meta.dirname + '/dist/javascript/index.html', result, 'utf8', (error) => {
 					if(error) return console.error(error);
@@ -44,7 +44,7 @@ function htmlPlugin() {
 // https://vitejs.dev/config/
 // https://github.com/vitejs/vite/issues/378#issuecomment-768816653
 export default defineConfig({
-	plugins: [vue(), htmlPlugin()],
+	plugins: [vue(), scriptLicensesTable()],
 	resolve: {
 		alias: {
 		'@': fileURLToPath(new URL('./src', import.meta.url))

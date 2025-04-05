@@ -150,8 +150,8 @@
 				this.changeOffsetAndRefresh(0);
 			},
 			changeSelectedType(type) {
-				if(this.sortSelection === 'type') {
 					this.selectedType = type;
+				if(this.sortSelection === 'type') {
 					this.changeOffsetAndRefresh(0);
 				}
 			},
@@ -173,18 +173,18 @@
 		<div class="button-row">
 			<span id="sort-buttons">
 				<label class="radio">
-					<input type="radio" @change="changeSort('id')" name="sort-pokemon" value="id" checked>
+					<input type="radio" @input="changeSort('id')" name="sort-pokemon" value="id" checked>
 					Sort by ID
 				</label>
 				<label class="radio">
-					<input type="radio" @change="changeSort('type')" name="sort-pokemon" value="type">
+					<input type="radio" @input="changeSort('type')" name="sort-pokemon" value="type">
 					Sort by Type
 				</label>
 			</span>
 			<!-- <p>sortSelection: {{ sortSelection }}</p> -->
 			<div class="select">
 				<label for="type-select">Type</label>
-				<select id="type-select" @change="changeSelectedType($event.target.value)"> <!-- https://stackoverflow.com/questions/51953173/how-do-i-pass-input-text-using-v-onchange-to-my-vue-method -->
+				<select id="type-select" @input="changeSelectedType($event.target.value)">
 					<option value="1">Normal</option>
 					<option value="2">Fighting</option>
 					<option value="3">Flying</option>

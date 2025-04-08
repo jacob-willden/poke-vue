@@ -25,14 +25,15 @@ function scriptLicensesTable() {
 	return {
 		name: 'script-licenses-table',
 		async closeBundle() {
-			// Modified from asgoth on StackOverflow (CC BY-SA 3.0): https://stackoverflow.com/questions/14177087/replace-a-string-in-a-file-with-nodejs
-			readFile(import.meta.dirname + '/dist/javascript/index.html', 'utf8', (error, data) => {
-				if(error) return console.error(error);
+			readFile(import.meta.dirname + '/dist/javascript/index.html', 'utf-8', (error, oldHTML) => {
+				if(error) {
+					console.error(error);
+					return;
+				}
 				const regex = /\<table id=\"jslicense-labels1\">.*\<\/table>/;
-				const result = data.replace(regex, getTableRows());
-
-				writeFile(import.meta.dirname + '/dist/javascript/index.html', result, 'utf8', (error) => {
-					if(error) return console.error(error);
+				const newHTML = oldHTML.replace(regex, getTableRows());
+				writeFile(import.meta.dirname + '/dist/javascript/index.html', newHTML, error => {
+					if(error) console.error(error);
 				});
 			});
 		}
